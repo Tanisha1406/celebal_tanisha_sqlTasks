@@ -1,0 +1,18 @@
+select 
+
+cast(sum(case f.gender when 'Female' then 1  end) as float) /cast (sum (case s.gender when 'Female' then 1 
+													  when 'Male' then 1
+														--when 'NULL' then 1
+														end) as float)
+from fact_inactive f join simulationtest s
+on (f.Username=s.[Employee ID])
+--where s.gender in ('Male','Female','Null')
+--group by f.gender
+
+select 
+cast(sum(case f.gender when 'Male' then 1  end) as float) /cast (sum (case s.gender when 'Female' then 1 
+													  when 'Male' then 1
+														--when 'NULL' then 1
+														end) as float)
+from fact_inactive f join simulationtest s
+on (f.Username=s.[Employee ID])
