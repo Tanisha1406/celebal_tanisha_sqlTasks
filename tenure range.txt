@@ -1,0 +1,9 @@
+update [dbo].[Fact_Employee_Central]
+ set  [tenure range]=
+ (case when DATEDIFF(MONTH,[Last_Promotion_Date],'2018-04-01')<18 then '0-17'
+     when DATEDIFF(MONTH,[Last_Promotion_Date],'2018-04-01')<36 then '18-35'
+	 when DATEDIFF(MONTH,[Last_Promotion_Date],'2018-04-01')<54 then  '36-54'
+	 when DATEDIFF(MONTH,[Last_Promotion_Date],'2018-04-01')>54 then  '54+'
+	 else 'null'
+	  end )
+ 
