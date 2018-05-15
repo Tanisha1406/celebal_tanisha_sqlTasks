@@ -1,0 +1,6 @@
+
+
+  select avg(ctc_amount)  as avg_ctc_amount,[BU_SSU_Description],[Business_Email_Information_Email_Address]   from Fact_Employee_Central
+  where Position_ID is not null
+  and Employment_Details_Hire_Date>'2017-04-01'
+  group by [BU_SSU_Description],[Business_Email_Information_Email_Address]
