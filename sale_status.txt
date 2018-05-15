@@ -1,0 +1,20 @@
+ create table sale
+  (id int identity,
+  product_id varchar(50),
+  sale_start_date varchar(500),
+  sale_end_date varchar(500))
+
+  insert into sale( product_id,sale_start_date,sale_end_date) values
+  ('123','2014-01-04','2014-01-10'),
+   ('123','2017-04-18','2017-05-10')
+ insert into sale( product_id,sale_start_date,sale_end_date) values
+   ('127','2018-05-15','2018-05-16'),
+   ('126','2018-04-15','2018-05-20')
+
+
+
+ 	  select *,
+   	(case  when (DATEDIFF(day,getdate(),sale_end_date))>0 then 'sale going on'
+			 else 'sale ended'
+			 end) sale_status
+  	 from sale
