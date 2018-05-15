@@ -1,0 +1,3 @@
+select fc.username,fc.table_id,fc.OTE_Amount/f.aop_fy19 as "currency_converter",fc.OTE_Amount,fc.ctc_currency,f.aop_fy19 from [dbo].[Fact_Employee_Central] fc join
+fx_currency f
+on (fc.CTC_Currency=f.currency)
