@@ -1,0 +1,2 @@
+ select left(aid,len([Employee ID])) as "Employee_id",substring(AID,charindex('-',AID)+1,len([position id])) as position_id 
+ from [dbo].[simulationtest]
