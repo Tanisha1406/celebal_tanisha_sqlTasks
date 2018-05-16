@@ -1,0 +1,21 @@
+select t.t2,sum(a.[Prorated Budgeted Cost])-sum(s.cost) as actual_diff ,
+
+(sum(a.[Prorated Budgeted Cost])-sum(s.cost))*100/nullif(sum(a.[Prorated Budgeted Cost]),0) as per_diff,
+
+ sum(a.[Prorated Budgeted Cost]) budget,sum(s.cost) as cost,b.status,b.[Full Name],b.[BU SSU]
+from [dbo].[AOP13] a
+join [dbo].[hierarchy_level_emp_temp] t
+on (t.t10=a.[position id])
+join
+[dbo].[Actual_simulation_AOP_CY_GMC] s
+on (t.t10=s.[position id])
+join [dbo].[Actual_simulation_AOP_CY_BUHR] b
+on (t.t2=b.[position id])
+join [dbo].[T_hierarchy_on_positions_wo_nulls] h
+on (t.t2=h.emp_position_id)
+where b.status='Active'
+and b.[Full Name] is not null
+and t.t1 in (select [position id] from [dbo].[GMC_List])
+and h.steps in (1,2,3)
+and h.[Employee ID] in (select distinct [Reporting Manager ID] from [dbo].[T_hierarchy_on_positions_wo_nulls])
+group by t.t2,b.status,b.[Full Name],b.[BU SSU]
