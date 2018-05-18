@@ -1,0 +1,41 @@
+create trigger tr_sales
+on [dbo].[inprocess_simulation_AOP_CY_BUHR]
+for update
+as 
+begin
+  declare @Anaplan nvarchar(500),@Simulation nvarchar(500),@Simulation_Effective nvarchar(500),@Post_Tag nvarchar(500),@Post_Tag_Facility nvarchar(500)
+  ,@Post_Tag_Sub_Band nvarchar(500),@Post_Tag_OTE_Override nvarchar(500),@report_type nvarchar(500),@original_sub_band nvarchar(500),@transfer_to_subBand nvarchar(500)
+
+ set @Anaplan=(select [Anaplan Code] from inserted)
+ set @Simulation=(select [Simulation Tag] from inserted where [Anaplan ID]=@Anaplan)
+ set @Simulation_Effective=(select [Simulation Effective Date] from inserted where [Anaplan ID]=@Anaplan)
+ set @Post_Tag=(select [Post Tag Country] from inserted where [Anaplan ID]=@Anaplan)
+ set @Post_Tag_Facility=(select [Post Tag Facility] from inserted where [Anaplan ID]=@Anaplan)
+ set @Post_Tag_Sub_Band=(select [Post Tag Sub Band] from inserted where [Anaplan ID]=@Anaplan)
+ set @Post_Tag_OTE_Override=(select [Post Tag OTE Override (Local Currency)] from inserted where [Anaplan ID]=@Anaplan)
+  set @original_sub_band=(select [original_subBand] from [dbo].[inprocess_simulation_AOP_CY_BUHR] where [Anaplan ID]=@Anaplan)
+  set @transfer_to_subBand=(select [transfer_to_subBand] from [dbo].[inprocess_simulation_AOP_CY_BUHR] where [Anaplan ID]=@Anaplan)
+  set @report_type=(select [Report Type] from inserted where [Anaplan ID]=@Anaplan)
+   
+   if(@report_type='Headcount')
+      begin
+	      set @Simulation='Exit w/o Replacement'
+		  set @Simulation_Effective=(select EOMONTH(getdate()))
+		end
+	if(@report_type!='Headcount')
+	    begin
+		 set @Simulation='Surrendered Position'
+		 set @Simulation_Effective=''
+		end
+	if (@original_sub_band=@transfer_to_subBand)
+		begin
+		 set @Simulation='Reclassify Attributes'
+		  set @Simulation_Effective=(select EOMONTH(getdate()))
+			set @Post_Tag='City Cluster'
+			 set @Post_Tag_Facility='City Cluster'
+		end 
+
+		insert into [dbo].[inprocess_simulation_AOP_CY_BUHR_update]
+		values(@Anaplan,@report_type,@Simulation,@Simulation_Effective,@Post_Tag,@Post_Tag_Facility,@Post_Tag_Sub_Band,@Post_Tag_OTE_Override)
+
+   end
