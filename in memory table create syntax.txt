@@ -1,0 +1,25 @@
+ALTER DATABASE practise ADD FILEGROUP IM CONTAINS MEMORY_OPTIMIZED_DATA;
+
+ALTER DATABASE practise ADD FILE (NAME='IMOLTP',FILENAME='C:\inmemory') TO FILEGROUP IM;
+
+
+CREATE TABLE in_memory
+( ID INT NOT NULL PRIMARY KEY NONCLUSTERED HASH WITH (BUCKET_COUNT = 10)
+, name varchar(50)) WITH (MEMORY_OPTIMIZED = ON)
+GO
+
+
+
+insert into in_memory
+values (1,'AVC')
+
+
+select * from in_memory
+
+
+
+
+
+SELECT object_name(object_id) AS Name, *  
+FROM sys.dm_db_xtp_table_memory_stats
+GO
