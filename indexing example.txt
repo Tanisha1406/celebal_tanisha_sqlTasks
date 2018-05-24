@@ -1,0 +1,16 @@
+
+select t.*
+from 
+(select * from [dbo].[indexing_test]) t
+union 
+
+select t1.*
+from 
+(select * from indexing_test) t1
+
+
+
+
+drop index i1 on [dbo].[indexing_test](id)
+
+create unique index i1 on [dbo].[indexing_test](id)
